@@ -1,2 +1,2 @@
-Gabriel Prazeres
+Gabriel Praseres
 Lourenço Knopik Junior
