@@ -4,7 +4,7 @@
 struct circuits{
 grafo_t *graph;
 int id;
-lista_enc_t *nodes;
+lista_enc_t *essencial_nodes;
 
 };
 
@@ -31,7 +31,7 @@ char sinal;
 circ_t *create_circuit(int id, int siz){
 circ_t *a=(circ_t *)malloc(sizeof(circ_t));
 a->graph=cria_grafo(siz);
-a->nodes=cria_lista_enc();
+a->essencial_nodes=cria_lista_enc();
 a->id=id;
 return a;
 }
