@@ -10,6 +10,6 @@ typedef struct node node_t;
 typedef struct V_source tens_t;
 circ_t *create_circuit(int id, int siz);
 grafo_t *get_graph(circ_t *test);
-void cria_resitor(tipo_t *resistencia,int a,int b);
+void create_resitance(circ_t *cir ,tipo_t *res, int a,int b);
 
 #endif // CIRCUITS_H_INCLUDED
