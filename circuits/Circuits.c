@@ -37,11 +37,17 @@ a->id=id;
 return a;
 }
 
+
+tipo_t *cir_get_resitencia(res_t *r){
+return r->resistencia;
+}
+
+
 grafo_t *get_graph(circ_t *test){
 return test->graph;
 }
 
-void create_resitance(circ_t *cir ,tipo_t *res, int a,int b){
+void create_resitor(circ_t *cir ,tipo_t *res, int a,int b){
 res_t *resi=(res_t *)malloc(sizeof(res_t));
 resi->resistencia=res;
 resi->id=a+b;
@@ -54,8 +60,9 @@ cria_adjacencia(cir->graph,b,a);
 void create_source(circ_t *cir,tipo_t *v,int a,int b){
 tens_t *source=malloc(sizeof(tens_t));
 source->tensao=v;
-source->id=-a-b;
+source->id=1;
 ar_set_chave(cir->graph,source,a,b);
+source->id=-1;
 ar_set_chave(cir->graph,source,b,a);
 cria_adjacencia(cir->graph,a,b);
 cria_adjacencia(cir->graph,b,a);
@@ -83,4 +90,6 @@ for(i=0;i<c->tamanho;i++){
 
 
 }
+
+
 

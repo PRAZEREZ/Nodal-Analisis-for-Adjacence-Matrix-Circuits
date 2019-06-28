@@ -1,8 +1,13 @@
 #ifndef MATRIX_H_INCLUDED
 #define MATRIX_F_INCLUDED
 
-typedef float tipo_t;
-tipo_t *create_type(float a);
+typedef struct mytype tipo_t;
+
 float retorna_tipo(tipo_t *a);
+tipo_t *create_tipo(float a);
+void set_tipo(tipo_t *a,float b);
+void free_tipo(tipo_t *vetor_nao_ponteiro);
+void addup(tipo_t *a,tipo_t *b);
+tipo_t **create_vetor(int tamanho);
 
 #endif // MATRIX_H_INCLUDED

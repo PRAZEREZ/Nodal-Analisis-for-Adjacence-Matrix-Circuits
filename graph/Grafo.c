@@ -183,3 +183,18 @@ int adjacente(grafo_t *g, int u, int v){
 
 	return ((g->matriz_adj[u][v].adj));
 }
+/**
+  * @brief  Retorna o numero adjacências no vérticev
+  * @param  v: índice do vértice v
+  *
+  * @retval int: verdadeiro se u for adjacente a v
+  */
+int adjacencias(grafo_t *g,int u){
+int i;
+int s=0;
+for(i=0;i<g->n_vertices;i++){
+    s=s+g->matriz_adj[u][i].adj;
+
+}
+return s;
+}
