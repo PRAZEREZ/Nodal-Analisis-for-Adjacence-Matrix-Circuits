@@ -39,30 +39,42 @@ tipo_t *b=create_tipo(1/a->r);
 return b;
 }
 
-tipo_t **create_vetor(int tamanho){
+tipo_t **create_vetor(int size){
  int i;
- tipo_t **vetor=malloc(sizeof(tipo_t *)*tamanho);
- for(i=0;i<tamanho;i++)
+ tipo_t **vetor=malloc(sizeof(tipo_t *)*size);
+ for(i=0;i<size;i++)
     vetor[i]=create_tipo(0);
 
 
     return vetor;
 }
 
-tipo_t ***create_matrix(int tamanho){
-    tipo_t ***matrix=malloc(sizeof(tipo_t **)*tamanho);
+tipo_t ***create_matrix(int size){
+    tipo_t ***matrix=malloc(sizeof(tipo_t **)*size);
     int i;
-    for(i=0;i<tamanho;i++)
-    matrix[i]=create_vetor(tamanho);
+    for(i=0;i<size;i++)
+    matrix[i]=create_vetor(size);
 
 
 
 return matrix;
 }
+void print_matrix(tipo_t ***matrix,int size){
+int i,j;
+for(i=0;i<size;i++){
+    for(j=0;j<size;j++)
+        printf("%5.f ",matrix[i][j]->r);
+    printf("\n");
+}
 
 
-void solve_system(tipo_t ***matrix,tipo_t **b){
 
+
+
+
+}
+
+void solve_system(tipo_t ***matrix,tipo_t **b,int size){
 
 
 }

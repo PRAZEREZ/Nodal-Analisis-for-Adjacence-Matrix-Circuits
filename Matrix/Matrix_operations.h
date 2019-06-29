@@ -9,5 +9,5 @@ void set_tipo(tipo_t *a,float b);
 void free_tipo(tipo_t *vetor_nao_ponteiro);
 void addup(tipo_t *a,tipo_t *b);
 tipo_t **create_vetor(int tamanho);
-
+void print_matrix(tipo_t ***matrix,int size);
 #endif // MATRIX_H_INCLUDED

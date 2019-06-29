@@ -17,12 +17,16 @@ circ_t *exemplo1()
     create_resitor(c,F(3),1,2);
     create_resitor(c,F(1),5,2);
     create_resitor(c,F(3),5,3);
-
-
-
-
-
-
+    /*    /---\
+        /       \
+       3 -- 4 -- 5
+       | \_ |_  /|
+       +    |    |
+       20   |   |
+       -    |    |
+       |    |    |
+       0 -- 1 -- 2 */
+    return c;
 }
 
 circ_t *exemplo2()
@@ -30,26 +34,20 @@ circ_t *exemplo2()
 
 
 
-
+    return NULL;
 }
 
 circ_t *exemplo3()
 {
 
-
+    return NULL;
 }
 
 int main()
 {
-    tipo_t **a=create_vetor(3);
-    int i;
-    set_tipo(a[2],5);
+
     circ_t *b=exemplo1();
-    for(i=0; i<3; i++)
-        printf("%f\n",retorna_tipo(a[i]));
-
-
-
+    solve_circuit(b);
 
     return 0;
 }

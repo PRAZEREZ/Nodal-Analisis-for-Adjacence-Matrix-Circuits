@@ -198,3 +198,20 @@ for(i=0;i<g->n_vertices;i++){
 }
 return s;
 }
+
+int mini_ds(grafo_t *g,int inicial,int caminho,tipo_t *res_atual,tipo_t* (*resistencia)(void *)){
+int a,b;
+int i,j;
+if(adjacencias(g,caminho)<2)
+    a=-1;
+    else if(adjacencias(g,caminho)==2)
+        for(i=0;i<g->n_vertices;i++){
+            if(adjacente(g,a,i) && i!=inicial){
+                addup(res_atual,resistencia((g->matriz_adj[inicial][caminho].chave)));
+                a=mini_ds(g,caminho,i,res_atual,resistencia);
+                }
+
+        }
+    else a=caminho;
+return a;
+}

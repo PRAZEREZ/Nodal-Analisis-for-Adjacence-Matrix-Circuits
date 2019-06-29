@@ -5,12 +5,13 @@
 #include "../Linked_list/lista_enc.h"
 
 typedef struct circuits circ_t;
-typedef struct resistor res_t;
+typedef struct component comp_t;
 typedef struct node node_t;
-typedef struct V_source tens_t;
 circ_t *create_circuit(int id, int siz);
 grafo_t *get_graph(circ_t *test);
 void create_source(circ_t *cir,tipo_t *v,int a,int b);
-void create_resitor(circ_t *cir ,tipo_t *res, int a,int b);
+void create_resitor(circ_t *cir,tipo_t *res, int a,int b);
+void solve_circuit(circ_t *cir);
+tipo_t *circuit_get_res(void *key);
 
 #endif // CIRCUITS_H_INCLUDED
