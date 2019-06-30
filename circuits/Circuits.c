@@ -121,9 +121,11 @@ tipo_t *circuit_get_volt(void *key)
 
     if(buffer->id==1)
         return buffer->tamanho;
-    else if(buffer->id==-1){
+    else if(buffer->id==-1)
+    {
         mult(x, buffer->tamanho);
-        return x;}
+        return x;
+    }
     else
         return create_tipo(0);
 
@@ -140,38 +142,40 @@ void solve_circuit(circ_t *cir, int referenc)
     tipo_t ***SMatrix,**B;
     no_t *no_lista;
     int i,j,k,l; //iterators
-    int num_nos,next,temp;
+    int num_nos,next;
     int *nodess;
     int *exeptions;
+    int *sper_nodes;
     node_t *noh;
     num_nos=lista_tamanho(cir->nodes)-1;
     nodess=malloc(sizeof(int)*num_nos);
     exeptions=malloc(sizeof(int)*num_nos);
+    sper_nodes=malloc(sizeof(int)*num_nos);
     no_lista=obter_cabeca(cir->nodes);
-    k=0;
-    for(i=num_nos-1; no_lista; i--)
+
+    for(i=0; no_lista;)
     {
         noh=obter_dado(no_lista);
-        nodess[i]=noh->id;
-        exeptions[i]=-1;
-        if(noh->id==referenc){
-            noh->volt=create_tipo(0);
-            nodess[i]=-1;
+        if(noh->id!=referenc)
+        {
+            sper_nodes[i]=-1;
+            nodess[i]=noh->id;
+            exeptions[i]=-1;
             i++;
         }
-
-
+        else
+        {
+            noh->volt=create_tipo(0);
+        }
         no_lista=obtem_proximo(no_lista);
     }
-
-
 
     B=create_vetor(num_nos);
     SMatrix=create_matrix(num_nos);
 
 
 
-    for(i=0; i<num_nos; i++)
+    for(i=0; i<num_nos-1; i++)
         for(j=0; j<cir->tamanho; j++)
             if(adjacente(cir->graph,nodess[i],j) &&j!=referenc)
             {
@@ -180,58 +184,73 @@ void solve_circuit(circ_t *cir, int referenc)
                 if(next<0)
                 {
                     exeptions[i]=j;
-                }
-            }
-
-        for(i=0; i<num_nos; i++)
-            for(j=0; j<cir->tamanho; j++)
-            if(adjacente(cir->graph,nodess[i],j) && exeptions[i]!=j )
-            {
-                myres=create_tipo(0);
-                next=next_branchout(cir->graph,nodess[i],j,myres,circuit_get_res);
-                for(k=0; nodess[k]!=next; k++) ;
-
-                if(!is_zero(myres))
-                {
-                    invert(myres);
-                    addup(SMatrix[i][k],myres);;
-                    buff=create_tipo(-1);
-                    mult(buff,myres);
-
-                    addup(SMatrix[i][i],buff);
-                }
-                else if(0 )  //super no
-                {
-                    exeptions[k]=0;
-                    buffer=SMatrix[i];
-                    SMatrix[i]=create_vetor(num_nos-1);
-                    free_array(buffer,num_nos-1);
-                    addup(SMatrix[i][k],create_tipo(1));
-                    addup(SMatrix[i][i],create_tipo(-1));
-                    myvolt=create_tipo(0);
-                    next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
-                    addup(B[i],myvolt);
-                }
-
-
+                }//busca pelas arestas que nao levam a nos essenciais
             }
 
     for(i=0; i<num_nos; i++)
-        for(j=0; j<cir->tamanho; j++)
-            if(adjacente(cir->graph,nodess[i],j) &&0)
+        for(j=0; j<cir->tamanho; j++){
+            if(adjacente(cir->graph,nodess[i],j) && exeptions[i]!=j && sper_nodes[i]==-1 )
             {
-                if(i>referenc)
-                    temp=i;
-                myvolt=create_tipo(0);
                 myres=create_tipo(0);
-                next_branchout(cir->graph,nodess[i],j,myres,circuit_get_res);
-                next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
-                addup(B[temp],myvolt);
-                printf("%f\n",retorna_tipo(myvolt));
+                next=next_branchout(cir->graph,nodess[i],j,myres,circuit_get_res);
                 if(!is_zero(myres)){
-                negative(B[temp]);
-                divide(B[temp],myres);}
+                   invert(myres);
+                   addup(SMatrix[i][i],myres);
+                if(next==referenc)
+                    ;
+                else{
+                for(k=0; nodess[k]!=next; k++) ;
+                    buff=create_tipo(-1);
+                    mult(buff,myres);
+                    addup(SMatrix[i][k],buff);
+                }
+                 //ate aqui funciona
+
+                myvolt=create_tipo(0);
+                next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
+                if(!is_zero(myvolt)){
+                addup(B[i],myvolt);
+                negative(B[i]);
+
+                printf("v= %f   r=%f\n\n",retorna_tipo(myvolt),retorna_tipo(myres));
+                 mult(B[i],myres);
+                }}
+                else   //!super no
+                {
+                    /*
+                    buffer=SMatrix[i];
+                    SMatrix[i]=create_vetor(num_nos);
+                    free_array(buffer,num_nos);
+                    if(next==referenc)
+                     addup(SMatrix[i][i],create_tipo(-1));
+                    else{
+                    for(k=0; nodess[k]!=next; k++) ;
+                    sper_nodes[k]=1;
+                    sper_nodes[i]=1;
+                    addup(SMatrix[i][i],create_tipo(-1));
+                    addup(SMatrix[i][k],create_tipo(1));
+
+                    }
+
+                    printf("a");
+                    //isso ta certo pra baixo
+                    myvolt=create_tipo(0);
+                    next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
+                    if(!is_zero(myvolt)){
+                        addup(B[i],myvolt);
+                        negative(myvolt);
+                        } */
+                }
+
+
+
+
+
+
             }
+            }
+
+
     print_matrix(SMatrix,num_nos);
     print_array(B,num_nos);
 
