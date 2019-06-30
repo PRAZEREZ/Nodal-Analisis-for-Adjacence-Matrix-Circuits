@@ -1,7 +1,7 @@
 #include "Circuits.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define CMP_INT(x,y)
+
 
 struct circuits
 {
@@ -44,6 +44,7 @@ tipo_t *cir_get_resitencia(comp_t *r)
 }
 
 
+
 grafo_t *get_graph(circ_t *test)
 {
     return test->graph;
@@ -80,6 +81,14 @@ node_t *cria_noh(int id,int count)
     noh->adjacentes=count;
     noh->volt=NULL;
     return noh;
+=======
+circ_t *create_circuit(int id, int siz){
+circ_t *a=(circ_t *)malloc(sizeof(circ_t));
+a->graph=cria_grafo(siz);
+a->essencial_nodes=cria_lista_enc();
+a->id=id;
+return a;
+
 }
 
 void nohs_essenciais(circ_t *c)
