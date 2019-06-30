@@ -1,8 +1,10 @@
 #include "Circuits.h"
 #include <stdio.h>
 #include <stdlib.h>
-#define CMP_INT(x,y)
 
+#define ZERO create_tipo(0)
+#define ZERAR(x) set_tipo(x,0)
+#define UNO create_tipo(1)
 struct circuits
 {
     grafo_t *graph;
@@ -138,10 +140,10 @@ tipo_t* circuit_return_null(void *key)
 void solve_circuit(circ_t *cir, int referenc)
 {
     nohs_essenciais(cir);
-    tipo_t *myres,**buffer,*buff, *myvolt;
+    tipo_t *myres, *myvolt;
     tipo_t ***SMatrix,**B;
     no_t *no_lista;
-    int i,j,k,l; //iterators
+    int i,j,k; //iterators
     int num_nos,next;
     int *nodess;
     int *exeptions;
@@ -172,9 +174,6 @@ void solve_circuit(circ_t *cir, int referenc)
 
     B=create_vetor(num_nos);
     SMatrix=create_matrix(num_nos);
-
-
-
     for(i=0; i<num_nos-1; i++)
         for(j=0; j<cir->tamanho; j++)
             if(adjacente(cir->graph,nodess[i],j) &&j!=referenc)
@@ -186,75 +185,92 @@ void solve_circuit(circ_t *cir, int referenc)
                     exeptions[i]=j;
                 }//busca pelas arestas que nao levam a nos essenciais
             }
-
     for(i=0; i<num_nos; i++)
-        for(j=0; j<cir->tamanho; j++){
-            if(adjacente(cir->graph,nodess[i],j) && exeptions[i]!=j && sper_nodes[i]==-1 )
+    {
+        for(j=0; j<cir->tamanho; j++)
+        {
+            if(adjacente(cir->graph,nodess[i],j) && exeptions[i]!=j )
             {
-                myres=create_tipo(0);
+                myres=ZERO;
                 next=next_branchout(cir->graph,nodess[i],j,myres,circuit_get_res);
-                if(!is_zero(myres)){
-                   invert(myres);
-                   addup(SMatrix[i][i],myres);
-                if(next==referenc)
-                    ;
-                else{
-                for(k=0; nodess[k]!=next; k++) ;
-                    buff=create_tipo(-1);
-                    mult(buff,myres);
-                    addup(SMatrix[i][k],buff);
+                if(!is_zero(myres))
+                {
+                    invert(myres);
+                    addup(SMatrix[i][i],myres);
+                    if(next==referenc)
+                        ;
+                    else
+                    {
+                        for(k=0; nodess[k]!=next; k++) ;
+                        negative(myres);
+                        addup(SMatrix[i][k],myres);
+                    }
+                    myvolt=ZERO;
+                    next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
+                    if(!is_zero(myvolt))
+                    {
+                        addup(B[i],myvolt);
+                        mult(B[i],myres);
+                    }
+                    printf("\n%d %d\n",nodess[i],next);
                 }
-                 //ate aqui funciona
-
-                myvolt=create_tipo(0);
-                next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
-                if(!is_zero(myvolt)){
-                addup(B[i],myvolt);
-                negative(B[i]);
-
-                printf("v= %f   r=%f\n\n",retorna_tipo(myvolt),retorna_tipo(myres));
-                 mult(B[i],myres);
-                }}
                 else   //!super no
                 {
-                    /*
-                    buffer=SMatrix[i];
-                    SMatrix[i]=create_vetor(num_nos);
-                    free_array(buffer,num_nos);
                     if(next==referenc)
-                     addup(SMatrix[i][i],create_tipo(-1));
-                    else{
-                    for(k=0; nodess[k]!=next; k++) ;
-                    sper_nodes[k]=1;
-                    sper_nodes[i]=1;
-                    addup(SMatrix[i][i],create_tipo(-1));
-                    addup(SMatrix[i][k],create_tipo(1));
-
+                        sper_nodes[i]=referenc;
+                    else
+                    {
+                        sper_nodes[i]=j;
                     }
-
-                    printf("a");
-                    //isso ta certo pra baixo
-                    myvolt=create_tipo(0);
-                    next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
-                    if(!is_zero(myvolt)){
-                        addup(B[i],myvolt);
-                        negative(myvolt);
-                        } */
                 }
-
-
-
-
-
-
             }
+        }
+        free_tipo(myres);
+        free_tipo(myvolt);
+    }
+    for(i=0; i<num_nos; i++)
+    {
+        if(sper_nodes[i]==referenc)
+        {
+            for(j=0; j<num_nos; j++)
+                ZERAR(SMatrix[i][j]);
+            myvolt=create_tipo(1);
+            addup(SMatrix[i][i],myvolt);
+            for(j=0; next!=referenc; j++)
+            {
+                ZERAR(myvolt);
+                next=next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
+            }
+            addup(B[i],myvolt);
+            free(myvolt);
+        }
+        else if(sper_nodes[i]!=-1){ //SUPER NOOO NAO EH AVIAO
+            //I EH POSITIVO K EH NEGATIVO
+
+            myvolt=ZERO;
+            next=next_branchout(cir->graph,nodess[i],sper_nodes[i],myvolt,circuit_get_volt);
+            addup(B[i],myvolt);
+            for(k=0; nodess[k]!=next; k++) ;
+            for(j=0; j<num_nos; j++){
+                addup(SMatrix[k][j],SMatrix[i][j]);
+                ZERAR(SMatrix[i][j]);
             }
 
+            myres=UNO;
+            addup(SMatrix[i][i],myres);
+            negative(myres);
+            addup(SMatrix[i][k],myres);
+            free(myres);
+            free(myvolt);
+            sper_nodes[k]=-1;
+        }
+
+    }
 
     print_matrix(SMatrix,num_nos);
     print_array(B,num_nos);
 
-
+    free(sper_nodes);
     free(exeptions);
     free(nodess);
 }
