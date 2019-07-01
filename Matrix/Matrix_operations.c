@@ -24,6 +24,7 @@ float retorna_x(tipo_t *a)
 
 void free_tipo(tipo_t *vetor_nao_ponteiro)
 {
+    if(vetor_nao_ponteiro)
     free(vetor_nao_ponteiro);
 }
 void divide(tipo_t *a,tipo_t *b){
@@ -118,13 +119,13 @@ free_array(L,tamanho);
 void free_array(tipo_t **array,int tamanho){
 int i;
 for(i=0;i<tamanho;i++)
-free(array[i]);
+free_tipo(array[i]);
 
 }
 void free_matrix(tipo_t ***M,int tamanho){
 int i;
 for(i=0;i<tamanho;i++)
-free(M[i]);
+free_array(M[i],tamanho);
 
 
 }

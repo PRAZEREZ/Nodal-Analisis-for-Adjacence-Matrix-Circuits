@@ -57,7 +57,11 @@ tipo_t *circuit_get_res(void *key);
   * @retval tipo_t *: Valor da tensao. Ou tipo com valor nulo.
   */
 tipo_t *circuit_get_volt(void *key);
+
+void free_circuit(circ_t *c);
+
 void exporta_comp(void *key,FILE *fp);
 void exportar_circuito_dot(const char *filename, circ_t *grafo);
+void free_comp(void *a);
 
 #endif // CIRCUITS_H_INCLUDED

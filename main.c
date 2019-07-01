@@ -66,9 +66,13 @@ int main()
 {
 
     circ_t *b=exemplo2();
-    solve_circuit(b,1);
-    exportar_circuito_dot("exemplo.txt",b);
 
+    solve_circuit(b,1);
+
+    //exportar_circuito_dot("exemplo.txt",b);
+
+    free_circuit(b);
+      printf("a");
     return 0;
 }
 

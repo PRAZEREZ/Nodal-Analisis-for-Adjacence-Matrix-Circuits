@@ -1,6 +1,6 @@
 #ifndef MATRIX_H_INCLUDED
 #define MATRIX_F_INCLUDED
-
+#include <stdio.h>
 
 typedef struct mytype tipo_t;
 /**

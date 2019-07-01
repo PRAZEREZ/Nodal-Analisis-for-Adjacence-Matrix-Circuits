@@ -1,7 +1,7 @@
 #include "Circuits.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "../Matrix/Matrix_operations.h"
+
 #define ZERO create_tipo(0)
 #define UNO create_tipo(1)
 #define ZERAR(x) set_tipo_x(x,0)
@@ -56,12 +56,17 @@ grafo_t *get_graph(circ_t *test)
 void create_resitor(circ_t *cir,tipo_t *res, int a,int b)
 {
     comp_t *resi=(comp_t *)malloc(sizeof(comp_t));
+    comp_t *rest=(comp_t *)malloc(sizeof(comp_t));
     resi->tamanho=res;
     resi->id=2;
-    ar_set_chave(cir->graph,resi,a,b);
-    ar_set_chave(cir->graph,resi,b,a);
+    rest->tamanho=ZERO;
+    addup(rest->tamanho,res);
+    rest->id=2;
     cria_adjacencia(cir->graph,a,b);
     cria_adjacencia(cir->graph,b,a);
+    ar_set_chave(cir->graph,rest,a,b);
+    ar_set_chave(cir->graph,resi,b,a);
+
 }
 
 void create_source(circ_t *cir,tipo_t *v,int a,int b)
@@ -111,10 +116,14 @@ void nohs_essenciais(circ_t *c)
 tipo_t* circuit_get_res(void *key)
 {
     comp_t *buffer=key;
-    if(buffer->id==2)
-        return buffer->tamanho;
+    tipo_t *dado=ZERO;
+
+    if(buffer->id==2){
+    addup(dado,buffer->tamanho);
+    return dado;
+    }
     else
-        return create_tipo(0);
+        return dado;
 
 }
 tipo_t *circuit_get_volt(void *key)
@@ -122,17 +131,20 @@ tipo_t *circuit_get_volt(void *key)
     if(!key)
         return NULL;
     comp_t *buffer=key;
-    tipo_t *x=create_tipo(-1);
+    tipo_t *x=ZERO;
 
-    if(buffer->id==1)
-        return buffer->tamanho;
+    if(buffer->id==1){
+        addup(x, buffer->tamanho);
+        return x;
+}
     else if(buffer->id==-1)
     {
-        mult(x, buffer->tamanho);
+        negative(x);
+        addup(x, buffer->tamanho);
         return x;
     }
     else
-        return create_tipo(0);
+        return x;
 
 }
 tipo_t* circuit_return_null(void *key)
@@ -170,7 +182,7 @@ void solve_circuit(circ_t *cir, int referenc)
         }
         else
         {
-            noh->volt=create_tipo(0);
+            noh->volt=ZERO;
         }
         no_lista=obtem_proximo(no_lista);
     }
@@ -215,7 +227,7 @@ void solve_circuit(circ_t *cir, int referenc)
                         addup(B[i],myvolt);
                         mult(B[i],myres);
                     }
-                    printf("\n%d %d\n",nodess[i],next);
+                free_tipo(myvolt);
                 }
                 else   //!super no
                 {
@@ -226,10 +238,11 @@ void solve_circuit(circ_t *cir, int referenc)
                         sper_nodes[i]=j;
                     }
                 }
+                 free_tipo(myres);
+
             }
         }
-        free_tipo(myres);
-        free_tipo(myvolt);
+
     }
     for(i=0; i<num_nos; i++)
     {
@@ -245,7 +258,7 @@ void solve_circuit(circ_t *cir, int referenc)
                 next=next_branchout(cir->graph,nodess[i],j,myvolt,circuit_get_volt);
             }
             addup(B[i],myvolt);
-            free(myvolt);
+            free_tipo(myvolt);
         }
         else if(sper_nodes[i]!=-1){ //SUPER NOOO NAO EH AVIAO
             //I EH POSITIVO K EH NEGATIVO
@@ -263,17 +276,13 @@ void solve_circuit(circ_t *cir, int referenc)
             addup(SMatrix[i][i],myres);
             negative(myres);
             addup(SMatrix[i][k],myres);
-            free(myres);
-            free(myvolt);
+            free_tipo(myres);
+            free_tipo(myvolt);
             sper_nodes[k]=-1;
         }
 
     }
-
-    print_matrix(SMatrix,num_nos);
-    print_array(B,num_nos);
     solve_system(SMatrix,B,num_nos);
-    print_array(B,num_nos);
     no_lista=obter_cabeca(cir->nodes);
     for(i=0;no_lista;){
         noh=obter_dado(no_lista);
@@ -285,7 +294,7 @@ void solve_circuit(circ_t *cir, int referenc)
         no_lista=obtem_proximo(no_lista);
     }
 
-    free(B);
+    free_array(B,num_nos);
     free_matrix(SMatrix,num_nos);
     free(sper_nodes);
     free(exeptions);
@@ -304,7 +313,6 @@ void exportar_circuito_dot(const char *filename, circ_t *circuito){
     no_t *no_lista=obter_cabeca(circuito->nodes);
     node_t *essentials;
     while(no_lista){
-
         essentials=obter_dado(no_lista);
         fprintf(fp, "%d [label=%f]\n", essentials->id, retorna_x(essentials->volt));
         no_lista=obtem_proximo(no_lista);
@@ -312,18 +320,35 @@ void exportar_circuito_dot(const char *filename, circ_t *circuito){
     }
 
    exportar_grafo_a(circuito->graph,fp,exporta_comp);
-    /*
-    for (i=0; i < circuito->tamanho; i++){
-        for (j=0; j < circuito->tamanho && j<=i; j++){
-            if (adjacente(circuito->graph,i,j)){
-
-                fprintf(fp, "%d -- %d", j, i);
-            }
-        }
-    }
-    fprintf(fp, "}");
-    fclose (fp); */
 }
+
+void free_comp(void *a){
+    if(a==NULL){
+        return;
+    }
+    comp_t *b=(comp_t *)a;
+    free_tipo(b->tamanho);
+}
+
+
+void free_circuit(circ_t *c){
+    libera_grafo_especial(c->graph,free_comp);
+    no_t *no_lista=obter_cabeca(c->nodes),*no_temp;
+    node_t *noh_tipo;
+    while(no_lista!=NULL){
+        noh_tipo=obter_dado(no_lista);
+        free_tipo(noh_tipo->volt);
+        free(noh_tipo);
+        no_temp=no_lista;
+        no_lista=obtem_proximo(no_lista);
+        free(no_temp);
+    }
+
+    free(c);
+
+
+}
+
 
 void exporta_comp(void *key,FILE *fp){
 
@@ -341,4 +366,5 @@ if(key==NULL && fp==NULL){
 
 
 }
+
 
