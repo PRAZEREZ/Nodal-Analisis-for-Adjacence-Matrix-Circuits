@@ -314,10 +314,10 @@ int lista_tamanho(lista_enc_t *lista){
 		fprintf(stderr,"lista tamanho: ponteiro invalido");
 		exit(EXIT_FAILURE);
 	}
-		
-	}
-	
-	
-	
+
+
+
+
+
 return lista->tamanho;
 }

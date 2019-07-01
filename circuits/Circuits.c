@@ -1,10 +1,10 @@
 #include "Circuits.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "../Matrix/Matrix_operations.h"
 #define ZERO create_tipo(0)
 #define UNO create_tipo(1)
-#define ZERAR(x) set_tipo(x,0)
+#define ZERAR(x) set_tipo_x(x,0)
 
 struct circuits
 {
@@ -84,15 +84,8 @@ node_t *cria_noh(int id,int count)
     noh->adjacentes=count;
     noh->volt=NULL;
     return noh;
-=======
-circ_t *create_circuit(int id, int siz){
-circ_t *a=(circ_t *)malloc(sizeof(circ_t));
-a->graph=cria_grafo(siz);
-a->essencial_nodes=cria_lista_enc();
-a->id=id;
-return a;
-
 }
+
 
 void nohs_essenciais(circ_t *c)
 {
@@ -279,9 +272,25 @@ void solve_circuit(circ_t *cir, int referenc)
 
     print_matrix(SMatrix,num_nos);
     print_array(B,num_nos);
+    solve_system(SMatrix,B,num_nos);
+    print_array(B,num_nos);
+    no_lista=obter_cabeca(cir->nodes);
+    for(i=0;no_lista;){
+        noh=obter_dado(no_lista);
 
+        if(noh->id!=referenc){
+            noh->volt=B[i];
+            i++;
+        }
+        no_lista=obtem_proximo(no_lista);
+    }
+
+    free(B);
+    free_matrix(SMatrix,num_nos);
     free(sper_nodes);
     free(exeptions);
     free(nodess);
 }
+
+
 
