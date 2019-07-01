@@ -113,5 +113,12 @@ void negative( tipo_t *b);
   * @retval nenhum.
   */
 void free_matrix(tipo_t ***M,int tamanho);
-
+/**
+  * @brief Resolve sistemas lineares, método Gauss Siedel
+  * @param	matriz: Matriz de termos dependentes
+  * @param	C: Vetor de termos idependentes
+  * @param	tamanho: tamanho da matriz
+  * @retval nenhum.   
+  */
+void solve_system(tipo_t ***matriz,tipo_t **C,int tamanho)
 #endif // MATRIX_H_INCLUDED
