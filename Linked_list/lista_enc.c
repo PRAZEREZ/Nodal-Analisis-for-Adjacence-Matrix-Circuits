@@ -301,7 +301,23 @@ void *remover_no(lista_enc_t *lista, no_t *no_removido)
 }
 
 
-int lista_tamanho(lista_enc_t *lista){
 
+
+/**
+  * @brief  retorna o tamanho da lista encadeada
+  * @param	lista: lista que se deseja saber o tamanho
+  * @retval int: tamanho da lista.
+  */
+int lista_tamanho(lista_enc_t *lista){
+	if(lista==NULL)
+	{
+		fprintf(stderr,"lista tamanho: ponteiro invalido");
+		exit(EXIT_FAILURE);
+	}
+		
+	}
+	
+	
+	
 return lista->tamanho;
 }
