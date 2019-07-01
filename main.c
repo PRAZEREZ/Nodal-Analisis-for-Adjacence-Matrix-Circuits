@@ -9,7 +9,7 @@ circ_t *exemplo1()
 {
     circ_t *c=create_circuit(1,6);
 
-    create_source(c,F(20),0,3);
+    create_source(c,F(20),3,0); //+  -
 
     create_resitor(c,F(2),0,1);
     create_resitor(c,F(3),1,2);
@@ -33,8 +33,8 @@ circ_t *exemplo1()
 circ_t *exemplo2()
 {
     circ_t *c=create_circuit(1,12);
-    create_source(c,F(30),0,4);
-    create_source(c,F(20),6,2);
+    create_source(c,F(30),4,0);  //+  -
+    create_source(c,F(20),2,6);  //+  -
     create_resitor(c,F(7),0,1);
     create_resitor(c,F(1000),1,4);
     create_resitor(c,F(3),1,5);
@@ -67,6 +67,7 @@ int main()
 
     circ_t *b=exemplo2();
     solve_circuit(b,1);
+    exportar_circuito_dot("exemplo.txt",b);
 
     return 0;
 }

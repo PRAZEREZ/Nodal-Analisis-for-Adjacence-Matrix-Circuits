@@ -7,7 +7,6 @@
  *      Author: Renan Augusto Starke
  */
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -246,3 +245,29 @@ int  next_branchout(grafo_t *g,int inicial,int caminho,tipo_t *res_atual,tipo_t*
 
     return a;
 }
+void exportar_grafo_a(grafo_t *g,FILE *fp,void (*printkey)(void *,
+                                                           FILE *)){
+
+int i,j;
+
+    for (i=0; i < g->n_vertices; i++){
+        for (j=0; j < g->n_vertices && j<=i; j++){
+            if (adjacente(g,i,j)){
+
+                fprintf(fp, "%d -> %d", j, i);
+                 printf("a");
+                printkey(g->matriz_adj[i][j].chave,fp);
+                fprintf(fp,"\n");
+
+            }
+        }
+    }
+    fprintf(fp, "}");
+    fclose (fp);
+
+
+
+
+
+}
+
