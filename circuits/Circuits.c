@@ -287,6 +287,80 @@ void solve_circuit(circ_t *cir, int referenc)
     for(i=0;no_lista;){
         noh=obter_dado(no_lista);
 
+    print_matrix(SMatrix,num_nos);
+    print_array(B,num_nos);
+    solve_system(SMatrix,B,num_nos);
+    print_array(B,num_nos);
+    no_lista=obter_cabeca(cir->nodes);
+    for(i=0;no_lista;){
+        noh=obter_dado(no_lista);
+
+        if(noh->id!=referenc){
+            noh->volt=B[i];
+            i++;
+        }
+        no_lista=obtem_proximo(no_lista);
+    }
+
+    free(B);
+    free_matrix(SMatrix,num_nos);
+    free(sper_nodes);
+    free(exeptions);
+    free(nodess);
+}
+
+void exportar_circuito_dot(const char *filename, circ_t *circuito){
+
+    FILE* fp = fopen (filename, "w");
+    if (fp == NULL) {
+        printf ("Erro ao abrir o arquivo.\n");
+        exit(1);
+    }
+
+    fprintf(fp, "digraph G {\n");
+    no_t *no_lista=obter_cabeca(circuito->nodes);
+    node_t *essentials;
+    while(no_lista){
+
+        essentials=obter_dado(no_lista);
+        fprintf(fp, "%d [label=%f]\n", essentials->id, retorna_x(essentials->volt));
+        no_lista=obtem_proximo(no_lista);
+
+    }
+
+   exportar_grafo_a(circuito->graph,fp,exporta_comp);
+    /*
+    for (i=0; i < circuito->tamanho; i++){
+        for (j=0; j < circuito->tamanho && j<=i; j++){
+            if (adjacente(circuito->graph,i,j)){
+
+                fprintf(fp, "%d -- %d", j, i);
+            }
+        }
+    }
+    fprintf(fp, "}");
+    fclose (fp); */
+}
+
+void exporta_comp(void *key,FILE *fp){
+
+if(key==NULL && fp==NULL){
+    printf("ponteiro nulo hahaha");
+    exit(-1);
+    }
+    comp_t *buffer=key;
+    if(buffer->id==2)
+        fprintf(fp,"[label=\"%2.f Ώ\"]",retorna_x(buffer->tamanho));
+    else if(buffer->id==1)
+        fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
+    else if(buffer->id==-1)
+        fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
+
+
+}
+
+
+ 
         if(noh->id!=referenc){
             noh->volt=B[i];
             i++;
@@ -295,11 +369,6 @@ void solve_circuit(circ_t *cir, int referenc)
     }
 
     free_array(B,num_nos);
-    free_matrix(SMatrix,num_nos);
-    free(sper_nodes);
-    free(exeptions);
-    free(nodess);
-}
 
 void exportar_circuito_dot(const char *filename, circ_t *circuito){
 
@@ -356,15 +425,8 @@ if(key==NULL && fp==NULL){
     printf("ponteiro nulo hahaha");
     exit(-1);
     }
-    comp_t *buffer=key;
-    if(buffer->id==2)
-        fprintf(fp,"[label=%2.f]",retorna_x(buffer->tamanho));
-    else if(buffer->id==1)
         fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
-    else if(buffer->id==-1)
         fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
-
-
 }
 
 
