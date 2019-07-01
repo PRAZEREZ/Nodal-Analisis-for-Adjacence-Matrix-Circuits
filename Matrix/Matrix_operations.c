@@ -89,11 +89,37 @@ for(i=0;i<size;i++){
 
 }
 
-void solve_system(tipo_t ***matrix,tipo_t **b,int size){
+void solve_system(tipo_t ***matriz,tipo_t **C,int tamanho)
+{
 
+tipo_t **L;
+tipo_t **G;
+L=create_vetor(tamanho);
+G=create_vetor(tamanho);
+int iter,i,k;
 
+for(i=0;i<tamanho;i++){
+    L[i]->x=0;
+    G[i]->x=0;
 }
 
+
+for(iter=0;iter<50;iter++)
+for(i=0;i<tamanho;i++){
+L[i]->x=C[i]->x/matriz[i][i]->x;
+for(k=0;k<i;k++)
+L[i]->x=L[i]->x-matriz[i][k]->x*L[k]->x/matriz[i][i]->x;
+for(k=i+1;k<tamanho;k++)
+L[i]->x=L[i]->x-matriz[i][k]->x*G[k]->x/matriz[i][i]->x;
+for(k=0;k<tamanho;k++)
+    G[k]->x=L[k]->x;
+}
+for(i=0;i<tamanho;i++)
+    C[i]=L[i];
+free_array(G,tamanho);
+free_array(L,tamanho);
+
+}
 void free_array(tipo_t **array,int tamanho){
 int i;
 for(i=0;i<tamanho;i++)
