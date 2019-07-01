@@ -333,11 +333,11 @@ if(key==NULL && fp==NULL){
     }
     comp_t *buffer=key;
     if(buffer->id==2)
-        fprintf(fp,"[label=%2.f]",retorna_x(buffer->tamanho));
+        fprintf(fp,"[label=\"%2.f Ώ\"]",retorna_x(buffer->tamanho));
     else if(buffer->id==1)
-        fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
+        fprintf(fp,"[label=\"%2.f V\" ][color=blue]",retorna_x(buffer->tamanho));
     else if(buffer->id==-1)
-        fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
+        fprintf(fp,"[label=\"%2.f V\"][color=red]",retorna_x(buffer->tamanho));
 
 
 }
