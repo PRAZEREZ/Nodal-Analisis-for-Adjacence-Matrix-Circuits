@@ -260,8 +260,7 @@ void solve_circuit(circ_t *cir, int referenc)
             addup(B[i],myvolt);
             free_tipo(myvolt);
         }
-        else if(sper_nodes[i]!=-1){ //SUPER NOOO NAO EH AVIAO
-            //I EH POSITIVO K EH NEGATIVO
+        else if(sper_nodes[i]!=-1){
 
             myvolt=ZERO;
             next=next_branchout(cir->graph,nodess[i],sper_nodes[i],myvolt,circuit_get_volt);
@@ -300,7 +299,7 @@ void solve_circuit(circ_t *cir, int referenc)
             i++;
         }
         no_lista=obtem_proximo(no_lista);
-    }
+    }}
 
     free(B);
     free_matrix(SMatrix,num_nos);
@@ -309,38 +308,7 @@ void solve_circuit(circ_t *cir, int referenc)
     free(nodess);
 }
 
-void exportar_circuito_dot(const char *filename, circ_t *circuito){
 
-    FILE* fp = fopen (filename, "w");
-    if (fp == NULL) {
-        printf ("Erro ao abrir o arquivo.\n");
-        exit(1);
-    }
-
-    fprintf(fp, "digraph G {\n");
-    no_t *no_lista=obter_cabeca(circuito->nodes);
-    node_t *essentials;
-    while(no_lista){
-
-        essentials=obter_dado(no_lista);
-        fprintf(fp, "%d [label=%f]\n", essentials->id, retorna_x(essentials->volt));
-        no_lista=obtem_proximo(no_lista);
-
-    }
-
-   exportar_grafo_a(circuito->graph,fp,exporta_comp);
-    /*
-    for (i=0; i < circuito->tamanho; i++){
-        for (j=0; j < circuito->tamanho && j<=i; j++){
-            if (adjacente(circuito->graph,i,j)){
-
-                fprintf(fp, "%d -- %d", j, i);
-            }
-        }
-    }
-    fprintf(fp, "}");
-    fclose (fp); */
-}
 
 void exporta_comp(void *key,FILE *fp){
 
@@ -360,15 +328,9 @@ if(key==NULL && fp==NULL){
 }
 
 
- 
-        if(noh->id!=referenc){
-            noh->volt=B[i];
-            i++;
-        }
-        no_lista=obtem_proximo(no_lista);
-    }
 
-    free_array(B,num_nos);
+
+
 
 void exportar_circuito_dot(const char *filename, circ_t *circuito){
 
@@ -412,21 +374,7 @@ void free_circuit(circ_t *c){
         no_lista=obtem_proximo(no_lista);
         free(no_temp);
     }
-
     free(c);
-
-
-}
-
-
-void exporta_comp(void *key,FILE *fp){
-
-if(key==NULL && fp==NULL){
-    printf("ponteiro nulo hahaha");
-    exit(-1);
-    }
-        fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
-        fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
 }
 
 
