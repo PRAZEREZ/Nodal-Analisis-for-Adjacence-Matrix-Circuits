@@ -91,7 +91,7 @@ circ_t *exemplo3()
     return c;
 }
 
-circ_t *exemplo4()//com paralelo
+circ_t *exemplo4()//com paralelo//erro
 {
     circ_t *c =create_circuit(1,4);
     create_resitor(c,F(1000),0,1);
