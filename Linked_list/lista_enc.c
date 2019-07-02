@@ -142,10 +142,10 @@ int lista_vazia(lista_enc_t *lista)
 }
 
 /**
-  * @brief  Obtém a referência do início (cabeça) da lista encadeada.
+  * @brief  Obtm a referência do início (cabeça) da lista encadeada.
   * @param	lista: lista que se deseja obter o início.
   *
-  * @retval no_t *: nó inicial (cabeça) da lista.
+  * @retval no_t *: n inicial (cabeça) da lista.
   */
 no_t *obter_cabeca(lista_enc_t *lista){
 
@@ -314,10 +314,10 @@ int lista_tamanho(lista_enc_t *lista){
 		fprintf(stderr,"lista tamanho: ponteiro invalido");
 		exit(EXIT_FAILURE);
 	}
-		
-	}
-	
-	
-	
+
+
+
+
+
 return lista->tamanho;
 }

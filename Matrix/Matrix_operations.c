@@ -12,11 +12,11 @@ tipo_t *create_tipo(float a)
     return tipo;
 
 }
-void set_tipo(tipo_t *a,float b){
+void set_tipo_x(tipo_t *a,float b){
 a->x=b;
 }
 
-float retorna_tipo(tipo_t *a)
+float retorna_x(tipo_t *a)
 {
     tipo_t *f=a;
     return (float)f->x;
@@ -24,6 +24,7 @@ float retorna_tipo(tipo_t *a)
 
 void free_tipo(tipo_t *vetor_nao_ponteiro)
 {
+    if(vetor_nao_ponteiro)
     free(vetor_nao_ponteiro);
 }
 void divide(tipo_t *a,tipo_t *b){
@@ -81,12 +82,6 @@ for(i=0;i<size;i++){
         printf("%2f ",matrix[i][j]->x);
     printf("\n");
 }
-
-
-
-
-
-
 }
 
 void solve_system(tipo_t ***matriz,tipo_t **C,int tamanho)
@@ -120,20 +115,21 @@ free_array(G,tamanho);
 free_array(L,tamanho);
 
 }
+
 void free_array(tipo_t **array,int tamanho){
 int i;
 for(i=0;i<tamanho;i++)
-free(array[i]);
+free_tipo(array[i]);
 
 }
 void free_matrix(tipo_t ***M,int tamanho){
 int i;
 for(i=0;i<tamanho;i++)
-free(M[i]);
+free_array(M[i],tamanho);
 
 
 }
- 
+
 void print_array(tipo_t **arr,int size){
     int j;
     for(j=0;j<size;j++)

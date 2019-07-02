@@ -1,6 +1,6 @@
 #ifndef MATRIX_H_INCLUDED
 #define MATRIX_F_INCLUDED
-
+#include <stdio.h>
 
 typedef struct mytype tipo_t;
 /**
@@ -56,14 +56,14 @@ tipo_t ***create_matrix(int tamanho);
 /**
   * @brief  Printa uma matriz
   * @param	tamanho: tamanho da matriz
-  * @param  matrix: Matriz que vai ser printada 
+  * @param  matrix: Matriz que vai ser printada
   * @retval Nenhum
   */
 void print_matrix(tipo_t ***matrix,int size);
 /**
   * @brief  Printa um vetor
   * @param	tamanho: tamanho da vetor
-  * @param  arr: Vetor que vai ser printado 
+  * @param  arr: Vetor que vai ser printado
   * @retval Nenhum
   */
 void print_array(tipo_t **arr,int size);
@@ -118,7 +118,7 @@ void free_matrix(tipo_t ***M,int tamanho);
   * @param	matriz: Matriz de termos dependentes
   * @param	C: Vetor de termos idependentes
   * @param	tamanho: tamanho da matriz
-  * @retval nenhum.   
+  * @retval nenhum.
   */
-void solve_system(tipo_t ***matriz,tipo_t **C,int tamanho)
+void solve_system(tipo_t ***matriz,tipo_t **C,int tamanho);
 #endif // MATRIX_H_INCLUDED

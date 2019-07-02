@@ -55,6 +55,7 @@ circ_t *exemplo2()
     create_resitor(c,F(1000),9,11);
     create_resitor(c,F(2),10,11);
     return c;
+
 }
 
 circ_t *exemplo3()
@@ -108,9 +109,14 @@ circ_t *exemplo4()//com paralelo//erro
 int main()
 {
 
-    circ_t *b=exemplo1();
+    circ_t *b=exemplo2();
+
     solve_circuit(b,1);
 
+    //exportar_circuito_dot("exemplo.txt",b);
+
+    free_circuit(b);
+      printf("a");
     return 0;
 }
 
