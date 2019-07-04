@@ -76,7 +76,8 @@ void create_source(circ_t *cir,tipo_t *v,int a,int b)
     sourcep->tamanho=v;
     sourcep->id=1;
     ar_set_chave(cir->graph,sourcep,a,b);
-    sourcem->tamanho=v;
+    sourcem->tamanho=ZERO;
+    addup(sourcem->tamanho,v);
     sourcem->id=-1;
     ar_set_chave(cir->graph,sourcem,b,a);
     cria_adjacencia(cir->graph,a,b);
@@ -149,7 +150,7 @@ tipo_t *circuit_get_volt(void *key)
         return x;
 
 }
-tipo_t* circuit_return_null(void *key)
+tipo_t* return_null(void *key)
 {
     return NULL;
 }
@@ -196,7 +197,7 @@ void solve_circuit(circ_t *cir, int referenc)
             if(adjacente(cir->graph,nodess[i],j) &&j!=referenc)
             {
 
-                next=next_branchout(cir->graph,nodess[i],j,NULL,circuit_return_null);
+                next=next_branchout(cir->graph,nodess[i],j,NULL,return_null);
                 if(next<0)
                 {
                     exeptions[i]=j;
@@ -246,7 +247,8 @@ void solve_circuit(circ_t *cir, int referenc)
         }
 
     }
-    for(i=0; i<num_nos; i++){
+    for(i=0; i<num_nos; i++)
+    {
         if(sper_nodes[i]==referenc)
         {
             for(j=0; j<num_nos; j++)
@@ -282,46 +284,48 @@ void solve_circuit(circ_t *cir, int referenc)
             free_tipo(myres);
             free_tipo(myvolt);
             sper_nodes[k]=-1;
-        }}
-
-        solve_system(SMatrix,B,num_nos);
-        no_lista=obter_cabeca(cir->nodes);
-        for(i=0;no_lista;){
-            noh=obter_dado(no_lista);
-            if(noh->id!=referenc)
-            {
-                noh->volt=B[i];
-                i++;
-            }
-            no_lista=obtem_proximo(no_lista);
         }
-
-        free(B);
-        free_matrix(SMatrix,num_nos);
-        free(sper_nodes);
-        free(exeptions);
-        free(nodess);
     }
 
-    void exporta_comp(void *key,FILE *fp)
+    solve_system(SMatrix,B,num_nos);
+    no_lista=obter_cabeca(cir->nodes);
+    for(i=0; no_lista;)
     {
-
-
-        if(key==NULL && fp==NULL)
+        noh=obter_dado(no_lista);
+        if(noh->id!=referenc)
         {
-            printf("chave nula");
-            exit(-1);
+            noh->volt=B[i];
+            i++;
         }
-        comp_t *buffer=key;
-        if(buffer->id==2)
-            fprintf(fp,"[label=\"%2.f Ώ\"]",retorna_x(buffer->tamanho));
-        else if(buffer->id==1)
-            fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
-        else if(buffer->id==-1)
-            fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
-
-
+        no_lista=obtem_proximo(no_lista);
     }
+
+    free(B);
+    free_matrix(SMatrix,num_nos);
+    free(sper_nodes);
+    free(exeptions);
+    free(nodess);
+}
+
+void exporta_comp(void *key,FILE *fp)
+{
+
+
+    if(key==NULL && fp==NULL)
+    {
+        printf("chave nula");
+        exit(-1);
+    }
+    comp_t *buffer=key;
+    if(buffer->id==2)
+        fprintf(fp,"[label=\"%2.f Ώ\"]",retorna_x(buffer->tamanho));
+    else if(buffer->id==1)
+        fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
+    else if(buffer->id==-1)
+        fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
+
+
+}
 
 
 void exportar_circuito_dot(const char *filename, circ_t *circuito)
@@ -374,7 +378,7 @@ void free_circuit(circ_t *c)
         no_lista=obtem_proximo(no_lista);
         free(no_temp);
     }
-
+    free(c->nodes);
     free(c);
 
 

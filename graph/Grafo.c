@@ -104,7 +104,7 @@ grafo_t *cria_grafo(int vertices)
             perror("cria_grafo (matriz_adj[i])");
             exit(EXIT_FAILURE);
         }
-        for(j=0;j<vertices;j++)
+        for(j=0; j<vertices; j++)
             matriz_adj[i][j].chave=NULL;
     }
 
@@ -129,8 +129,10 @@ void libera_grafo_especial(grafo_t *g,void (*libera_chave)(void *))
         exit(EXIT_FAILURE);
     }
 
-    for (i=0; i < g->n_vertices; i++){
-        for(j=0;j<g->n_vertices;j++){
+    for (i=0; i < g->n_vertices; i++)
+    {
+        for(j=0; j<g->n_vertices; j++)
+        {
             chaves=g->matriz_adj[i][j].chave;
             libera_chave(chaves);
             free(chaves);
@@ -222,18 +224,26 @@ int adjacencias(grafo_t *g,int u)
     }
     return s;
 }
-
-int  next_branchout(grafo_t *g,int inicial,int caminho,tipo_t *res_atual,tipo_t* (*aresta_sum)(void *))
+/**
+  * @brief  Proucura uma ramificaçao a partir de uma aresta e vai somando a chave das arestas
+  * @param  inicial: vertice inicial
+  * @param  caminho: indice do vertice que tambem contem a aresta inicial
+  * @param  peso_atual: Variavel que soma
+  * @param  aresta_sum: Ponteiro de funcao que soma os pesos das arestas
+  * @retval int: id numerico do vertice que possui rmaificaçao
+  */
+int  next_branchout(grafo_t *g,int inicial,int caminho,tipo_t *peso_atual,tipo_t* (*aresta_sum)(void *))
 {
-    int a,i,c;
-     #ifdef DEBUG
+    int v,i,c;
+#ifdef DEBUG
     printf("Next Branchout:\n");
-    #endif //debug
+#endif //debug
     c=adjacencias(g,caminho);
-    if(res_atual!=NULL){
-    tipo_t *melancia=aresta_sum((g->matriz_adj[inicial][caminho].chave));
-    addup(res_atual,melancia);
-    free_tipo(melancia);
+    if(peso_atual!=NULL)
+    {
+        tipo_t *melancia=aresta_sum((g->matriz_adj[inicial][caminho].chave));
+        addup(peso_atual,melancia);
+        free_tipo(melancia); //vetor buffer
     }
     if(c<2)
         return -1;
@@ -244,7 +254,7 @@ int  next_branchout(grafo_t *g,int inicial,int caminho,tipo_t *res_atual,tipo_t*
 
             if(adjacente(g,caminho,i) && i!=inicial)
             {
-                a=next_branchout(g,caminho,i,res_atual,aresta_sum);
+                v=next_branchout(g,caminho,i,peso_atual,aresta_sum);
             }
         }
     }
@@ -254,16 +264,26 @@ int  next_branchout(grafo_t *g,int inicial,int caminho,tipo_t *res_atual,tipo_t*
         return caminho;
     }
 
-    return a;
+    return v;
 }
-void exportar_grafo_a(grafo_t *g,FILE *fp,void (*printkey)(void *,
-                                                           FILE *)){
+/**
+  * @brief  Exporta Grafo a partir de um arquivo ainda aberto.
+  * @param  g: Grafo
+  * @param  fp: Ponteiro do arquivo
+  * @param  printkey: Ponteiro de funcao que exporta o peso
+  * @retval Nenhum
+  */
+void exportar_grafo_a(grafo_t *g,FILE *fp,void (*printkey)(void *,FILE *))
+{
 
-int i,j;
+    int i,j;
 
-    for (i=0; i < g->n_vertices; i++){
-        for (j=0; j < g->n_vertices && j<=i; j++){
-            if (adjacente(g,i,j)){
+    for (i=0; i < g->n_vertices; i++)
+    {
+        for (j=0; j < g->n_vertices && j<=i; j++)
+        {
+            if (adjacente(g,i,j))
+            {
 
                 fprintf(fp, "%d -> %d", j, i);
                 printkey(g->matriz_adj[i][j].chave,fp);

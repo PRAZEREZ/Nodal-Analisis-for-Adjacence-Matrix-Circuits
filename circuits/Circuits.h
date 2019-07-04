@@ -57,11 +57,42 @@ tipo_t *circuit_get_res(void *key);
   * @retval tipo_t *: Valor da tensao. Ou tipo com valor nulo.
   */
 tipo_t *circuit_get_volt(void *key);
+/**
+  * @brief  Adiciona os nos essencias na lista encadeada
+  * @param	c: Circuito o qual nao tem nos essencias.
+  * @retval Nenhum
+  */
 
+void nohs_essenciais(circ_t *c);
+/**
+  * @brief  Libera a memoria do grafo e do circuito
+  * @param	c: Circuito a ser liberado
+  * @retval Nenhum
+  */
 void free_circuit(circ_t *c);
-
+/**
+  * @brief  Exporta um componente do circuito em linguagem dot
+  * @param	key: Componente a ser exportado
+  * @param	fp: Ponteiro para o arquivo
+  * @retval Nenhum
+  */
 void exporta_comp(void *key,FILE *fp);
-void exportar_circuito_dot(const char *filename, circ_t *grafo);
+/**
+  * @brief  Libera uma variavel do tipo comp_t *
+  * @param	a: ponteiro void, vai ser convertido para comp_t
+  * @retval Nenhum
+  */
 void free_comp(void *a);
-
+/**
+  * @brief  Exporta o circuito em linguagem dot
+  * @param	c: Circuito a ser exportado
+  * @retval Nenhum
+  */
+void exportar_circuito_dot(const char *filename, circ_t *grafo);
+/**
+  * @brief  Retorna vetor nulo
+  * @param	key: ponteiro
+  * @retval tipo_t*: Vetor nulo
+  */
+tipo_t* return_null(void *key);
 #endif // CIRCUITS_H_INCLUDED
