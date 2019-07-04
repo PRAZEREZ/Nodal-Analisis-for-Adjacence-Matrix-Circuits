@@ -81,7 +81,7 @@ circ_t *exemplo3()
 
     create_resitor(c,F(1000),7,8);
     create_resitor(c,F(60),8,10);//substitui pela proxima linha!
-    create_resitor(c,F(13),8,10);//paralelo
+    create_resitor(c,F(13),8,10);// Isso gera um leak de memoria, Isso é uma limitação da matriz de adjacencia
     create_resitor(c,F(10),9,10);
     create_resitor(c,F(1),9,11);
     create_resitor(c,F(7),11,15);
@@ -109,7 +109,7 @@ circ_t *exemplo4()//com paralelo//erro
 int main()
 {
 
-    circ_t *cir=exemplo1();
+    circ_t *cir=exemplo2(); // O exemplo 3 gera um leak de memoria
 
     solve_circuit(cir,1);
 
