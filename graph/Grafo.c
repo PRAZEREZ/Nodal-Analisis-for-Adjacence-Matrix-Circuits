@@ -133,7 +133,6 @@ void libera_grafo_especial(grafo_t *g,void (*libera_chave)(void *))
         for(j=0;j<g->n_vertices;j++){
             chaves=g->matriz_adj[i][j].chave;
             libera_chave(chaves);
-
             free(chaves);
         }
         free(g->matriz_adj[i]);
@@ -227,7 +226,9 @@ int adjacencias(grafo_t *g,int u)
 int  next_branchout(grafo_t *g,int inicial,int caminho,tipo_t *res_atual,tipo_t* (*aresta_sum)(void *))
 {
     int a,i,c;
-
+     #ifdef DEBUG
+    printf("Next Branchout:\n");
+    #endif //debug
     c=adjacencias(g,caminho);
     if(res_atual!=NULL){
     tipo_t *melancia=aresta_sum((g->matriz_adj[inicial][caminho].chave));

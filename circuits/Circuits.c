@@ -118,9 +118,10 @@ tipo_t* circuit_get_res(void *key)
     comp_t *buffer=key;
     tipo_t *dado=ZERO;
 
-    if(buffer->id==2){
-    addup(dado,buffer->tamanho);
-    return dado;
+    if(buffer->id==2)
+    {
+        addup(dado,buffer->tamanho);
+        return dado;
     }
     else
         return dado;
@@ -133,10 +134,11 @@ tipo_t *circuit_get_volt(void *key)
     comp_t *buffer=key;
     tipo_t *x=ZERO;
 
-    if(buffer->id==1){
+    if(buffer->id==1)
+    {
         addup(x, buffer->tamanho);
         return x;
-}
+    }
     else if(buffer->id==-1)
     {
         negative(x);
@@ -227,7 +229,7 @@ void solve_circuit(circ_t *cir, int referenc)
                         addup(B[i],myvolt);
                         mult(B[i],myres);
                     }
-                free_tipo(myvolt);
+                    free_tipo(myvolt);
                 }
                 else   //!super no
                 {
@@ -238,14 +240,13 @@ void solve_circuit(circ_t *cir, int referenc)
                         sper_nodes[i]=j;
                     }
                 }
-                 free_tipo(myres);
+                free_tipo(myres);
 
             }
         }
 
     }
-    for(i=0; i<num_nos; i++)
-    {
+    for(i=0; i<num_nos; i++){
         if(sper_nodes[i]==referenc)
         {
             for(j=0; j<num_nos; j++)
@@ -260,14 +261,16 @@ void solve_circuit(circ_t *cir, int referenc)
             addup(B[i],myvolt);
             free_tipo(myvolt);
         }
-        else if(sper_nodes[i]!=-1){ //SUPER NOOO NAO EH AVIAO
+        else if(sper_nodes[i]!=-1)
+        {
             //I EH POSITIVO K EH NEGATIVO
 
             myvolt=ZERO;
             next=next_branchout(cir->graph,nodess[i],sper_nodes[i],myvolt,circuit_get_volt);
             addup(B[i],myvolt);
             for(k=0; nodess[k]!=next; k++) ;
-            for(j=0; j<num_nos; j++){
+            for(j=0; j<num_nos; j++)
+            {
                 addup(SMatrix[k][j],SMatrix[i][j]);
                 ZERAR(SMatrix[i][j]);
             }
@@ -279,101 +282,54 @@ void solve_circuit(circ_t *cir, int referenc)
             free_tipo(myres);
             free_tipo(myvolt);
             sper_nodes[k]=-1;
-        }
+        }}
 
-    }
-    solve_system(SMatrix,B,num_nos);
-    no_lista=obter_cabeca(cir->nodes);
-    for(i=0;no_lista;){
-        noh=obter_dado(no_lista);
-
-    print_matrix(SMatrix,num_nos);
-    print_array(B,num_nos);
-    solve_system(SMatrix,B,num_nos);
-    print_array(B,num_nos);
-    no_lista=obter_cabeca(cir->nodes);
-    for(i=0;no_lista;){
-        noh=obter_dado(no_lista);
-
-        if(noh->id!=referenc){
-            noh->volt=B[i];
-            i++;
-        }
-        no_lista=obtem_proximo(no_lista);
-    }
-
-    free(B);
-    free_matrix(SMatrix,num_nos);
-    free(sper_nodes);
-    free(exeptions);
-    free(nodess);
-}
-
-void exportar_circuito_dot(const char *filename, circ_t *circuito){
-
-    FILE* fp = fopen (filename, "w");
-    if (fp == NULL) {
-        printf ("Erro ao abrir o arquivo.\n");
-        exit(1);
-    }
-
-    fprintf(fp, "digraph G {\n");
-    no_t *no_lista=obter_cabeca(circuito->nodes);
-    node_t *essentials;
-    while(no_lista){
-
-        essentials=obter_dado(no_lista);
-        fprintf(fp, "%d [label=%f]\n", essentials->id, retorna_x(essentials->volt));
-        no_lista=obtem_proximo(no_lista);
-
-    }
-
-   exportar_grafo_a(circuito->graph,fp,exporta_comp);
-    /*
-    for (i=0; i < circuito->tamanho; i++){
-        for (j=0; j < circuito->tamanho && j<=i; j++){
-            if (adjacente(circuito->graph,i,j)){
-
-                fprintf(fp, "%d -- %d", j, i);
+        solve_system(SMatrix,B,num_nos);
+        no_lista=obter_cabeca(cir->nodes);
+        for(i=0;no_lista;){
+            noh=obter_dado(no_lista);
+            if(noh->id!=referenc)
+            {
+                noh->volt=B[i];
+                i++;
             }
+            no_lista=obtem_proximo(no_lista);
         }
+
+        free(B);
+        free_matrix(SMatrix,num_nos);
+        free(sper_nodes);
+        free(exeptions);
+        free(nodess);
     }
-    fprintf(fp, "}");
-    fclose (fp); */
-}
 
-void exporta_comp(void *key,FILE *fp){
-
-if(key==NULL && fp==NULL){
-    printf("ponteiro nulo hahaha");
-    exit(-1);
-    }
-    comp_t *buffer=key;
-    if(buffer->id==2)
-        fprintf(fp,"[label=\"%2.f Ώ\"]",retorna_x(buffer->tamanho));
-    else if(buffer->id==1)
-        fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
-    else if(buffer->id==-1)
-        fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
+    void exporta_comp(void *key,FILE *fp)
+    {
 
 
-}
-
-
- 
-        if(noh->id!=referenc){
-            noh->volt=B[i];
-            i++;
+        if(key==NULL && fp==NULL)
+        {
+            printf("chave nula");
+            exit(-1);
         }
-        no_lista=obtem_proximo(no_lista);
+        comp_t *buffer=key;
+        if(buffer->id==2)
+            fprintf(fp,"[label=\"%2.f Ώ\"]",retorna_x(buffer->tamanho));
+        else if(buffer->id==1)
+            fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
+        else if(buffer->id==-1)
+            fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
+
+
     }
 
-    free_array(B,num_nos);
 
-void exportar_circuito_dot(const char *filename, circ_t *circuito){
+void exportar_circuito_dot(const char *filename, circ_t *circuito)
+{
 
     FILE* fp = fopen (filename, "w");
-    if (fp == NULL) {
+    if (fp == NULL)
+    {
         printf ("Erro ao abrir o arquivo.\n");
         exit(1);
     }
@@ -381,18 +337,22 @@ void exportar_circuito_dot(const char *filename, circ_t *circuito){
     fprintf(fp, "digraph G {\n");
     no_t *no_lista=obter_cabeca(circuito->nodes);
     node_t *essentials;
-    while(no_lista){
+    while(no_lista)
+    {
         essentials=obter_dado(no_lista);
         fprintf(fp, "%d [label=%f]\n", essentials->id, retorna_x(essentials->volt));
         no_lista=obtem_proximo(no_lista);
 
     }
 
-   exportar_grafo_a(circuito->graph,fp,exporta_comp);
+    exportar_grafo_a(circuito->graph,fp,exporta_comp);
+
 }
 
-void free_comp(void *a){
-    if(a==NULL){
+void free_comp(void *a)
+{
+    if(a==NULL)
+    {
         return;
     }
     comp_t *b=(comp_t *)a;
@@ -400,11 +360,13 @@ void free_comp(void *a){
 }
 
 
-void free_circuit(circ_t *c){
+void free_circuit(circ_t *c)
+{
     libera_grafo_especial(c->graph,free_comp);
     no_t *no_lista=obter_cabeca(c->nodes),*no_temp;
     node_t *noh_tipo;
-    while(no_lista!=NULL){
+    while(no_lista!=NULL)
+    {
         noh_tipo=obter_dado(no_lista);
         free_tipo(noh_tipo->volt);
         free(noh_tipo);
@@ -417,16 +379,4 @@ void free_circuit(circ_t *c){
 
 
 }
-
-
-void exporta_comp(void *key,FILE *fp){
-
-if(key==NULL && fp==NULL){
-    printf("ponteiro nulo hahaha");
-    exit(-1);
-    }
-        fprintf(fp,"[label=%2.f][color=blue]",retorna_x(buffer->tamanho));
-        fprintf(fp,"[label=%2.f][color=red]",retorna_x(buffer->tamanho));
-}
-
 
