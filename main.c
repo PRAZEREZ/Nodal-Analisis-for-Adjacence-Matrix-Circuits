@@ -65,11 +65,11 @@ circ_t *exemplo3()
 int main()
 {
 
-    circ_t *b=exemplo2();
+    circ_t *b=exemplo1();
 
     solve_circuit(b,1);
 
-    //exportar_circuito_dot("exemplo.txt",b);
+    exportar_circuito_dot("exemplo.txt",b);
 
     free_circuit(b);
       printf("a");
