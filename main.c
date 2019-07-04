@@ -109,15 +109,12 @@ circ_t *exemplo4()//com paralelo//erro
 int main()
 {
 
-    circ_t *b=exemplo2();
+    circ_t *cir=exemplo2();
 
-    solve_circuit(b,1);
+    solve_circuit(cir,1);
 
-    //exportar_circuito_dot("exemplo.txt",b);
+    //exportar_circuito_dot("circuito.txt",b);
 
-    free_circuit(b);
-      printf("a");
+    free_circuit(cir);
     return 0;
 }
-
-
